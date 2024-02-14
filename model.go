@@ -15,25 +15,25 @@ type KawalPemiluResponseData struct {
 }
 
 type CountingResult struct {
-	CandidateOne           int64  `json:"pas1"`
-	CandidateTwo           int64  `json:"pas2"`
-	CandidateThree         int64  `json:"pas3"`
-	TotalCompletedStations int64  `json:"totalCompletedTps"`
-	TotalStations          int64  `json:"totalTps"`
-	Place                  string `json:"name"`
-	UpdatedAt              int64  `json:"updateTs"`
+	CandidateOne           float64 `json:"pas1"`
+	CandidateTwo           float64 `json:"pas2"`
+	CandidateThree         float64 `json:"pas3"`
+	TotalCompletedStations int64   `json:"totalCompletedTps"`
+	TotalStations          int64   `json:"totalTps"`
+	Place                  string  `json:"name"`
+	UpdatedAt              int64   `json:"updateTs"`
 }
 
-func (r CountingResult) TotalVotes() int64 {
+func (r CountingResult) TotalVotes() float64 {
 	return r.CandidateOne + r.CandidateTwo + r.CandidateThree
 }
 
 func (r CountingResult) CandidateOnePercent() float64 {
-	return float64(r.CandidateOne) / float64(r.TotalVotes()) * 100
+	return r.CandidateOne / r.TotalVotes() * 100
 }
 
 func (r CountingResult) CandidateTwoPercent() float64 {
-	return float64(r.CandidateTwo) / float64(r.TotalVotes()) * 100
+	return r.CandidateTwo / r.TotalVotes() * 100
 }
 
 func (r CountingResult) CandidateThreePercent() float64 {

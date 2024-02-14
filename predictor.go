@@ -25,8 +25,8 @@ func (p *SimplePredictor) PredictResult(results []CountingResult) CountingResult
 	return prediction
 }
 
-func (*SimplePredictor) predictFull(original int64, result CountingResult) int64 {
-	prediction := original * result.TotalStations
-	prediction = prediction / result.TotalCompletedStations
+func (*SimplePredictor) predictFull(original float64, result CountingResult) float64 {
+	prediction := original * float64(result.TotalStations)
+	prediction = prediction / float64(result.TotalCompletedStations)
 	return prediction
 }
