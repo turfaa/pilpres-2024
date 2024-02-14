@@ -19,6 +19,8 @@ FROM --platform=${BUILDPLATFORM:-linux/amd64} gcr.io/distroless/static-debian11 
 WORKDIR /
 
 COPY --from=build /pilpres /pilpres
+COPY --from=build /app/static /static
+COPY --from=build /app/html /html
 
 USER nonroot:nonroot
 
