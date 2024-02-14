@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -14,15 +13,8 @@ type KawalPemiluClient struct {
 }
 
 func (c *KawalPemiluClient) GetNationalCountingResult(ctx context.Context) (KawalPemiluResponse, error) {
-	js, err := json.Marshal(KawalPemiluRequest{})
-	if err != nil {
-		return KawalPemiluResponse{}, fmt.Errorf("marshal json: %w", err)
-	}
-
-	jsBuf := bytes.NewBuffer(js)
-
-	path := fmt.Sprintf("%s/hierarchy2", c.BaseURL)
-	req, err := http.NewRequestWithContext(ctx, "POST", path, jsBuf)
+	path := fmt.Sprintf("%s/h?id=", c.BaseURL)
+	req, err := http.NewRequestWithContext(ctx, "GET", path, nil)
 	if err != nil {
 		return KawalPemiluResponse{}, fmt.Errorf("create request: %w", err)
 	}

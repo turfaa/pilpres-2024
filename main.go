@@ -13,7 +13,7 @@ import (
 func main() {
 	service := &Service{
 		KawalPemiluClient: &KawalPemiluClient{
-			BaseURL: "https://us-central1-kp24-fd486.cloudfunctions.net",
+			BaseURL: "https://kp24-fd486.et.r.appspot.com",
 		},
 		Predictor: &SimplePredictor{},
 	}
