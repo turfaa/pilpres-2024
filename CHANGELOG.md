@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.0] - 2024-02-20
+### :sparkles: New Features
+- [`cb5c479`](https://github.com/turfaa/pilpres-2024/commit/cb5c479f730e363679f113df78bfc4ce902108fb) - Add kecamatan-based prediction *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.1.0] - 2024-02-20
 ### :sparkles: New Features
 - [`9a570ff`](https://github.com/turfaa/pilpres-2024/commit/9a570ff06506476b28fca1283d199453964fca29) - Add city-based prediction *(commit by [@turfaa](https://github.com/turfaa))*
@@ -26,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.0.2]: https://github.com/turfaa/pilpres-2024/compare/v0.0.1...v0.0.2
 [v0.0.3]: https://github.com/turfaa/pilpres-2024/compare/v0.0.2...v0.0.3
 [v0.1.0]: https://github.com/turfaa/pilpres-2024/compare/v0.0.3...v0.1.0
+[v0.2.0]: https://github.com/turfaa/pilpres-2024/compare/v0.1.0...v0.2.0
