@@ -6,18 +6,29 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	kpClient := &KawalPemiluClient{
-		BaseURL: "https://kp24-fd486.et.r.appspot.com",
+		BaseURL:     "https://kp24-fd486.et.r.appspot.com",
+		Concurrency: 20,
 	}
+
+	kecamatanBasedService := &Service{
+		CountingResultGetter: kpClient.GetAllCitiesCountingResult,
+		Predictor:            &SimplePredictor{},
+		RefreshInterval:      20 * time.Minute,
+	}
+
+	go kecamatanBasedService.RunRefresher(context.Background())
 
 	cityBasedService := &Service{
 		CountingResultGetter: kpClient.GetAllProvincesCountingResult,
 		Predictor:            &SimplePredictor{},
+		RefreshInterval:      5 * time.Minute,
 	}
 
 	go cityBasedService.RunRefresher(context.Background())
@@ -25,13 +36,15 @@ func main() {
 	provinceBasedService := &Service{
 		CountingResultGetter: kpClient.GetNationalCountingResult,
 		Predictor:            &SimplePredictor{},
+		RefreshInterval:      time.Minute,
 	}
 
 	go provinceBasedService.RunRefresher(context.Background())
 
 	handler := &Handler{
-		CityBasedService:     cityBasedService,
-		ProvinceBasedService: provinceBasedService,
+		KecamatanBasedService: kecamatanBasedService,
+		CityBasedService:      cityBasedService,
+		ProvinceBasedService:  provinceBasedService,
 	}
 
 	router := gin.Default()

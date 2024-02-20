@@ -11,6 +11,7 @@ import (
 type Service struct {
 	CountingResultGetter CountingResultGetter
 	Predictor            *SimplePredictor
+	RefreshInterval      time.Duration
 
 	currentPrediction CountingResult
 	lock              sync.RWMutex
@@ -19,7 +20,7 @@ type Service struct {
 type CountingResultGetter func(ctx context.Context) (KawalPemiluResponse, error)
 
 func (s *Service) RunRefresher(ctx context.Context) {
-	ticker := time.NewTicker(5 * time.Minute)
+	ticker := time.NewTicker(s.RefreshInterval)
 	defer ticker.Stop()
 
 	for {

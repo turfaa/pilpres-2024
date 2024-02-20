@@ -7,10 +7,12 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type KawalPemiluClient struct {
-	BaseURL string
+	BaseURL     string
+	Concurrency int
 }
 
 func (c *KawalPemiluClient) GetNationalCountingResult(ctx context.Context) (KawalPemiluResponse, error) {
@@ -18,23 +20,62 @@ func (c *KawalPemiluClient) GetNationalCountingResult(ctx context.Context) (Kawa
 }
 
 func (c *KawalPemiluClient) GetAllProvincesCountingResult(ctx context.Context) (KawalPemiluResponse, error) {
+	ids := make([]string, 0, len(provinceByID))
+	for id := range provinceByID {
+		ids = append(ids, id)
+	}
+
+	return c.GetCountingResultByIDs(ctx, ids)
+}
+
+func (c *KawalPemiluClient) GetAllCitiesCountingResult(ctx context.Context) (KawalPemiluResponse, error) {
+	ids := make([]string, 0, len(cityByID))
+	for id := range cityByID {
+		ids = append(ids, id)
+	}
+
+	return c.GetCountingResultByIDs(ctx, ids)
+}
+
+func (c *KawalPemiluClient) GetCountingResultByIDs(ctx context.Context, ids []string) (KawalPemiluResponse, error) {
 	result := KawalPemiluResponse{
 		Result: KawalPemiluResponseData{
-			Aggregated: make(map[string][]CountingResult, len(provinceByID)),
+			Aggregated: make(map[string][]CountingResult, len(ids)),
 		},
 	}
 
-	for provinceID, province := range provinceByID {
-		provinceRes, err := c.GetCountingResultByID(ctx, provinceID)
-		if err != nil {
-			return KawalPemiluResponse{}, fmt.Errorf("get province %s counting result: %w", province, err)
-		}
+	var (
+		wg          sync.WaitGroup
+		lock        sync.Mutex
+		concurrency = make(chan struct{}, c.Concurrency)
+	)
 
-		for id, res := range provinceRes.Result.Aggregated {
-			result.Result.Aggregated[id] = append(result.Result.Aggregated[id], res...)
-		}
+	for _, id := range ids {
+		wg.Add(1)
+
+		go func(id string) {
+			defer wg.Done()
+
+			concurrency <- struct{}{}
+			defer func() {
+				<-concurrency
+			}()
+
+			res, err := c.GetCountingResultByID(ctx, id)
+			if err != nil {
+				log.Printf("error get place %s counting result: %s", id, err)
+				return
+			}
+
+			lock.Lock()
+			for resID, countingResults := range res.Result.Aggregated {
+				result.Result.Aggregated[resID] = append(result.Result.Aggregated[resID], countingResults...)
+			}
+			lock.Unlock()
+		}(id)
 	}
 
+	wg.Wait()
 	return result, nil
 }
 

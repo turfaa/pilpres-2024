@@ -1,11 +1,5 @@
 package main
 
-type KawalPemiluRequest struct {
-	Data struct {
-		ID string `json:"id"`
-	} `json:"data"`
-}
-
 type KawalPemiluResponse struct {
 	Result KawalPemiluResponseData `json:"result"`
 }
