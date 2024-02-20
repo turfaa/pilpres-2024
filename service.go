@@ -9,15 +9,17 @@ import (
 )
 
 type Service struct {
-	KawalPemiluClient *KawalPemiluClient
-	Predictor         *SimplePredictor
+	CountingResultGetter CountingResultGetter
+	Predictor            *SimplePredictor
 
 	currentPrediction CountingResult
 	lock              sync.RWMutex
 }
 
+type CountingResultGetter func(ctx context.Context) (KawalPemiluResponse, error)
+
 func (s *Service) RunRefresher(ctx context.Context) {
-	ticker := time.NewTicker(time.Minute)
+	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
 
 	for {
@@ -34,7 +36,7 @@ func (s *Service) RunRefresher(ctx context.Context) {
 }
 
 func (s *Service) RefreshPrediction(ctx context.Context) error {
-	res, err := s.KawalPemiluClient.GetNationalCountingResult(ctx)
+	res, err := s.CountingResultGetter(ctx)
 	if err != nil {
 		return fmt.Errorf("get national counting result from client: %w", err)
 	}

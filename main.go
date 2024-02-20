@@ -11,16 +11,28 @@ import (
 )
 
 func main() {
-	service := &Service{
-		KawalPemiluClient: &KawalPemiluClient{
-			BaseURL: "https://kp24-fd486.et.r.appspot.com",
-		},
-		Predictor: &SimplePredictor{},
+	kpClient := &KawalPemiluClient{
+		BaseURL: "https://kp24-fd486.et.r.appspot.com",
 	}
 
-	go service.RunRefresher(context.Background())
+	cityBasedService := &Service{
+		CountingResultGetter: kpClient.GetAllProvincesCountingResult,
+		Predictor:            &SimplePredictor{},
+	}
 
-	handler := &Handler{Service: service}
+	go cityBasedService.RunRefresher(context.Background())
+
+	provinceBasedService := &Service{
+		CountingResultGetter: kpClient.GetNationalCountingResult,
+		Predictor:            &SimplePredictor{},
+	}
+
+	go provinceBasedService.RunRefresher(context.Background())
+
+	handler := &Handler{
+		CityBasedService:     cityBasedService,
+		ProvinceBasedService: provinceBasedService,
+	}
 
 	router := gin.Default()
 	router.LoadHTMLGlob("html/*")

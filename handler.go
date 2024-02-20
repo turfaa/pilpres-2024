@@ -10,21 +10,36 @@ import (
 )
 
 type Handler struct {
-	Service *Service
+	CityBasedService     *Service
+	ProvinceBasedService *Service
 }
 
 func (h *Handler) GetPredictionPage(c *gin.Context) {
-	prediction, err := h.Service.GetNationalCountingPrediction(c)
+	provinceBasedPrediction, err := h.ProvinceBasedService.GetNationalCountingPrediction(c)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Maaf ada kesalahan")
-		log.Printf("Error getting prediction: %s", err)
+		log.Printf("Error getting province-based prediction: %s", err)
+		return
+	}
+
+	cityBasedPrediction, err := h.CityBasedService.GetNationalCountingPrediction(c)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Maaf ada kesalahan")
+		log.Printf("Error getting city-based prediction: %s", err)
 		return
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"CandidateOnePercent":   fmt.Sprintf("%.2f", prediction.CandidateOnePercent()),
-		"CandidateTwoPercent":   fmt.Sprintf("%.2f", prediction.CandidateTwoPercent()),
-		"CandidateThreePercent": fmt.Sprintf("%.2f", prediction.CandidateThreePercent()),
-		"UpdatedAt":             time.Unix(0, prediction.UpdatedAt*int64(time.Millisecond)).Format("02-Jan-2006 15:04:05"),
+		"TitleOne":                 "Prediksi Berdasarkan Kota",
+		"CandidateOnePercentOne":   fmt.Sprintf("%.2f", cityBasedPrediction.CandidateOnePercent()),
+		"CandidateTwoPercentOne":   fmt.Sprintf("%.2f", cityBasedPrediction.CandidateTwoPercent()),
+		"CandidateThreePercentOne": fmt.Sprintf("%.2f", cityBasedPrediction.CandidateThreePercent()),
+		"UpdatedAtOne":             time.Unix(0, cityBasedPrediction.UpdatedAt*int64(time.Millisecond)).Format("02-Jan-2006 15:04:05"),
+
+		"TitleTwo":                 "Prediksi Berdasarkan Provinsi",
+		"CandidateOnePercentTwo":   fmt.Sprintf("%.2f", provinceBasedPrediction.CandidateOnePercent()),
+		"CandidateTwoPercentTwo":   fmt.Sprintf("%.2f", provinceBasedPrediction.CandidateTwoPercent()),
+		"CandidateThreePercentTwo": fmt.Sprintf("%.2f", provinceBasedPrediction.CandidateThreePercent()),
+		"UpdatedAtTwo":             time.Unix(0, provinceBasedPrediction.UpdatedAt*int64(time.Millisecond)).Format("02-Jan-2006 15:04:05"),
 	})
 }

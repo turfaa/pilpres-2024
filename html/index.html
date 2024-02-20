@@ -22,35 +22,71 @@
     </style>
 </head>
 <body class="bg-white text-gray-800">
-<div class="min-h-screen flex items-center justify-center">
+<div class="min-h-screen flex flex-col items-center justify-center space-y-8 p-8">
     <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <div class="text-lg text-gray-900 font-extrabold mb-6">
+            {{ .TitleOne }}
+        </div>
         <div class="space-y-4">
             <div class="flex justify-between items-center">
                 <span>Anies</span>
-                <span>{{ .CandidateOnePercent }}%</span>
+                <span>{{ .CandidateOnePercentOne }}%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-inner" style="width: {{ .CandidateOnePercent }}%;"></div>
+                <div class="progress-bar-inner" style="width: {{ .CandidateOnePercentOne }}%;"></div>
             </div>
 
             <div class="flex justify-between items-center">
                 <span>Prabowo</span>
-                <span>{{ .CandidateTwoPercent }}%</span>
+                <span>{{ .CandidateTwoPercentOne }}%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-inner" style="width: {{ .CandidateTwoPercent }}%;"></div>
+                <div class="progress-bar-inner" style="width: {{ .CandidateTwoPercentOne }}%;"></div>
             </div>
 
             <div class="flex justify-between items-center">
                 <span>Ganjar</span>
-                <span>{{ .CandidateThreePercent }}%</span>
+                <span>{{ .CandidateThreePercentOne }}%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-inner" style="width: {{ .CandidateThreePercent }}%;"></div>
+                <div class="progress-bar-inner" style="width: {{ .CandidateThreePercentOne }}%;"></div>
             </div>
         </div>
         <div class="text-sm text-gray-600 mt-8">
-            Terakhir diupdate: {{ .UpdatedAt }}
+            Terakhir diupdate: {{ .UpdatedAtOne }}
+        </div>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <div class="text-lg text-gray-900 font-extrabold mb-6">
+            {{ .TitleTwo }}
+        </div>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span>Anies</span>
+                <span>{{ .CandidateOnePercentTwo }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" style="width: {{ .CandidateOnePercentTwo }}%;"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span>Prabowo</span>
+                <span>{{ .CandidateTwoPercentTwo }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" style="width: {{ .CandidateTwoPercentTwo }}%;"></div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span>Ganjar</span>
+                <span>{{ .CandidateThreePercentTwo }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" style="width: {{ .CandidateThreePercentTwo }}%;"></div>
+            </div>
+        </div>
+        <div class="text-sm text-gray-600 mt-8">
+            Terakhir diupdate: {{ .UpdatedAtTwo }}
         </div>
     </div>
 </div>
